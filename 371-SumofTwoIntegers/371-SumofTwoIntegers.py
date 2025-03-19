@@ -1,8 +1,14 @@
 class Solution:
     def getSum(self, a: int, b: int) -> int:
         # 32 bit mask in hexadecimal
+        # Why mask? In Python, integers are of arbitrary precision.
         mask = 0xffffffff
 
+        # logic:
+        # a + b without carry = a ^ b
+        # carry = (a & b) << 1
+        # a + b -> a ^ b + carry -> (a ^ b) ^ ((a & b) << 1) -> continue if carry remains
+        
         # Iterate till there is no carry 
         while (b & mask) != 0:
 

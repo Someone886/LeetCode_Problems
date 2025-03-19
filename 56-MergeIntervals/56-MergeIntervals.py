@@ -1,17 +1,47 @@
 class Solution:
-    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
-        sorted_intervals = sorted(intervals, key = lambda x: x[0])
-        ans = []
-
-        for interval in sorted_intervals:
-            if len(ans) == 0:
-                ans.append(interval)
-            
-            last_interval = ans[-1]
-            
-            if last_interval[1] >= interval[0]:
-                last_interval[1] = max(last_interval[1], interval[1])
+    def search(self, nums: List[int], target: int) -> int:
+        if len(nums) == 1:
+            if nums[0] == target:
+                return 0
             else:
-                ans.append(interval)
+                return -1
+
+        if len(nums) == 2:
+            if nums[0] == target:
+                return 0
+            elif nums[1] == target:
+                return 1
+            else:
+                return -1
         
-        return ans
+        l, r = 0, len(nums)-1
+        
+        while l <= r:
+            mid = l + (r - l) // 2
+            print(l, r, mid)
+            if nums[mid] == target:
+                return mid
+            
+            if nums[mid] > target:
+                if target == nums[l]:
+                    return l
+
+                if target < nums[l] and nums[mid] >= nums[l]:
+                    l = mid + 1
+                elif target < nums[l] and nums[mid] < nums[l]:
+                    r = mid - 1
+                else:
+                    r = mid - 1
+            
+            elif nums[mid] < target:
+                if target == nums[l]:
+                    return l
+
+                if target > nums[l] and nums[mid] >= nums[l]:
+                    l = mid + 1
+                elif target > nums[l] and nums[mid] < nums[l]:
+                    r = mid - 1
+                else:
+                    l = mid + 1
+        
+        return -1

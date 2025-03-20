@@ -1,24 +1,27 @@
 class Solution:
-    def getSum(self, a: int, b: int) -> int:
-        # 32 bit mask in hexadecimal
-        # Why mask? In Python, integers are of arbitrary precision.
-        mask = 0xffffffff
-
-        # logic:
-        # a + b without carry = a ^ b
-        # carry = (a & b) << 1
-        # a + b -> a ^ b + carry -> (a ^ b) ^ ((a & b) << 1) -> continue if carry remains
+    def evalRPN(self, tokens: List[str]) -> int:
+        operators = ["+", "-", "*", "/"]
+        holders = []
         
-        # Iterate till there is no carry 
-        while (b & mask) != 0:
-
-            # carry contains common set bits of a and b, left shifted by 1
-            carry = (a & b) << 1
-
-            # Update a with (a + b without carry)
-            a = a ^ b
-
-            # Update b with carry
-            b = carry 
-
-        return a & mask if b > 0 else a
+        for token in tokens:
+            if token not in operators:
+                holders.append(int(token))
+            else:
+                ele1 = holders[-2]
+                ele2 = holders[-1]
+                
+                if token == "+":
+                    result = ele1 + ele2
+                elif token == "-":
+                    result = ele1 - ele2
+                elif token == "*":
+                    result = ele1 * ele2
+                else:
+                    result = int(ele1 / ele2)
+                
+                holders = holders[:-2] + [result]
+                
+            # print(holders)
+        
+        return holders[0]
+        

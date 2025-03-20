@@ -8,73 +8,59 @@
 class Codec:
 
     def serialize(self, root):
-        """Encodes a tree to a single string.
+        """Encodes a tree to a single string using level-order traversal (BFS).
         
         :type root: TreeNode
         :rtype: str
         """
-        ans = []
+        if not root:
+            return "None"  # Edge case: if tree is empty
         
-        if root == None:
-            return str(ans)
+        q = [root]  # Queue for BFS traversal
+        res = []  # List to store serialized values
         
-        curr_level = [root]
-        while len(curr_level) != 0:
-            next_level = []
+        while q:
+            node = q.pop(0)  # Process the next node
             
-            for _ in range(len(curr_level)):
-                node = curr_level.pop(0)
-                
-                if node != None:
-                    ans.append(node.val)
-                    next_level.append(node.left)
-                    next_level.append(node.right)
-                else:
-                    ans.append(None)
-                    
-            curr_level = next_level
+            if node:
+                res.append(str(node.val))  # Store the node value
+                q.append(node.left)  # Add left child to queue
+                q.append(node.right)  # Add right child to queue
+            else:
+                res.append("None")  # Mark None for missing children
         
-        # print(str(ans))
-        return str(ans)
-            
-        
+        return ','.join(res)  # Convert list to a comma-separated string
 
     def deserialize(self, data):
-        """Decodes your encoded data to tree.
+        """Decodes the serialized string back into a binary tree using level-order traversal (BFS).
         
         :type data: str
         :rtype: TreeNode
         """
-        data = eval(data)
+        if data == "None":
+            return None  # Edge case: if the tree is empty
         
-        if len(data) == 0:
-            return None
+        # Convert string back to a list, handling "None" values
+        data = list(map(lambda x: None if x == "None" else int(x), data.split(",")))
         
-        root = TreeNode(data.pop(0))
-        curr_level = [root]
+        # Initialize root node
+        root = TreeNode(data[0])
+        q = [root]  # Queue to store nodes to be processed
+        i = 1  # Pointer to track position in the data list
         
-        while len(curr_level) != 0:
-            next_level = []
+        while q and i < len(data):
+            node = q.pop(0)  # Get the next node to assign children
             
-            for _ in range(len(curr_level)):
-                node = curr_level.pop(0)
-                
-                next_left_val = data.pop(0)
-                if next_left_val != None:
-                    node.left = TreeNode(next_left_val)
-                    next_level.append(node.left)
-                
-                next_right_val = data.pop(0)
-                if next_right_val != None:
-                    node.right = TreeNode(next_right_val)
-                    next_level.append(node.right)
+            # Process left child
+            if data[i] is not None:
+                node.left = TreeNode(data[i])
+                q.append(node.left)  # Add left child to queue
             
-            curr_level = next_level
+            # Process right child
+            if i + 1 < len(data) and data[i + 1] is not None:
+                node.right = TreeNode(data[i + 1])
+                q.append(node.right)  # Add right child to queue
+            
+            i += 2  # Move to the next pair of children
         
-        return root
-        
-
-# Your Codec object will be instantiated and called as such:
-# ser = Codec()
-# deser = Codec()
-# ans = deser.deserialize(ser.serialize(root))
+        return root  # Return reconstructed tree

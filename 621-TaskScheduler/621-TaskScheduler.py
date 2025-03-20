@@ -1,17 +1,80 @@
-class Solution:
-    # count - occurence of symbol with maximum number of occurences
-    # (n + 1) - number of elements in repeated interval 'A _ _' or 'A B _'.
-    # (count - 1) - maximum occurences of character with maximum maximum occurence except the last occurence of that character
-    # (count - 1) * (n + 1) - minimum number of symbols except the last one
-    # k - number of characters with maximum occurence.
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
 
-    # (count - 1) * (n + 1) + k
+class Codec:
 
-    def leastInterval(self, tasks: List[str], n: int) -> int:
-        counts = Counter(tasks)
-        sorted_counts = sorted(counts.values(), reverse=True)
+    def serialize(self, root):
+        """Encodes a tree to a single string.
+        
+        :type root: TreeNode
+        :rtype: str
+        """
+        ans = []
+        
+        if root == None:
+            return str(ans)
+        
+        curr_level = [root]
+        while len(curr_level) != 0:
+            next_level = []
+            
+            for _ in range(len(curr_level)):
+                node = curr_level.pop(0)
+                
+                if node != None:
+                    ans.append(node.val)
+                    next_level.append(node.left)
+                    next_level.append(node.right)
+                else:
+                    ans.append(None)
+                    
+            curr_level = next_level
+        
+        # print(str(ans))
+        return str(ans)
+            
+        
 
-        case_1 = len(tasks)
-        case_2 = (sorted_counts[0] - 1) * (n + 1) + sorted_counts.count(sorted_counts[0])
+    def deserialize(self, data):
+        """Decodes your encoded data to tree.
+        
+        :type data: str
+        :rtype: TreeNode
+        """
+        data = eval(data)
+        
+        if len(data) == 0:
+            return None
+        
+        root = TreeNode(data.pop(0))
+        curr_level = [root]
+        
+        while len(curr_level) != 0:
+            next_level = []
+            
+            for _ in range(len(curr_level)):
+                node = curr_level.pop(0)
+                
+                next_left_val = data.pop(0)
+                if next_left_val != None:
+                    node.left = TreeNode(next_left_val)
+                    next_level.append(node.left)
+                
+                next_right_val = data.pop(0)
+                if next_right_val != None:
+                    node.right = TreeNode(next_right_val)
+                    next_level.append(node.right)
+            
+            curr_level = next_level
+        
+        return root
+        
 
-        return max(case_1, case_2)
+# Your Codec object will be instantiated and called as such:
+# ser = Codec()
+# deser = Codec()
+# ans = deser.deserialize(ser.serialize(root))

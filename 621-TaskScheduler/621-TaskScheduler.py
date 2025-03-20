@@ -8,59 +8,65 @@
 class Codec:
 
     def serialize(self, root):
-        """Encodes a tree to a single string using level-order traversal (BFS).
+        """Encodes a tree to a single string.
         
         :type root: TreeNode
         :rtype: str
         """
-        if not root:
-            return "None"  # Edge case: if tree is empty
+        ans = []
         
-        q = [root]  # Queue for BFS traversal
-        res = []  # List to store serialized values
+        if root == None:
+            return str(ans)
         
-        while q:
-            node = q.pop(0)  # Process the next node
-            
-            if node:
-                res.append(str(node.val))  # Store the node value
-                q.append(node.left)  # Add left child to queue
-                q.append(node.right)  # Add right child to queue
+        q = [root]
+        
+        while len(q) != 0:
+            node = q.pop(0)
+            if node != None:
+                ans.append(node.val)
+                q.append(node.left)
+                q.append(node.right)
             else:
-                res.append("None")  # Mark None for missing children
+                ans.append(None)
         
-        return ','.join(res)  # Convert list to a comma-separated string
+        return str(ans)
+            
+        
 
     def deserialize(self, data):
-        """Decodes the serialized string back into a binary tree using level-order traversal (BFS).
+        """Decodes your encoded data to tree.
         
         :type data: str
         :rtype: TreeNode
         """
-        if data == "None":
-            return None  # Edge case: if the tree is empty
+        data = eval(data)
         
-        # Convert string back to a list, handling "None" values
-        data = list(map(lambda x: None if x == "None" else int(x), data.split(",")))
+        if len(data) == 0:
+            return None
         
-        # Initialize root node
-        root = TreeNode(data[0])
-        q = [root]  # Queue to store nodes to be processed
-        i = 1  # Pointer to track position in the data list
+        root = TreeNode(data.pop(0))
+        q = [root]
         
-        while q and i < len(data):
-            node = q.pop(0)  # Get the next node to assign children
-            
-            # Process left child
-            if data[i] is not None:
-                node.left = TreeNode(data[i])
-                q.append(node.left)  # Add left child to queue
-            
-            # Process right child
-            if i + 1 < len(data) and data[i + 1] is not None:
-                node.right = TreeNode(data[i + 1])
-                q.append(node.right)  # Add right child to queue
-            
-            i += 2  # Move to the next pair of children
+        while len(q) != 0:
+            node = q.pop(0)
+
+            if node != None:
+                left = data.pop(0)
+                if left != None:
+                    left_node = TreeNode(left)
+                    node.left = left_node
+                    q.append(left_node)
+                
+                right = data.pop(0)
+                if right != None:
+                    right_node = TreeNode(right)
+                    node.right = right_node
+                    q.append(right_node)
         
-        return root  # Return reconstructed tree
+        return root
+        
+
+# Your Codec object will be instantiated and called as such:
+# ser = Codec()
+# deser = Codec()
+# ans = deser.deserialize(ser.serialize(root))

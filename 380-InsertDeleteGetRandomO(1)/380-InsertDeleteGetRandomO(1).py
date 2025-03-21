@@ -1,35 +1,76 @@
-// Last updated: 3/20/2025, 9:48:38 PM
-class RandomizedSet:
+// Last updated: 3/20/2025, 9:57:57 PM
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
 
-    def __init__(self):
-        self.hash_map = {}
-        self.items = []
+class Codec:
 
-    def insert(self, val: int) -> bool:
-        if val in self.hash_map:
-            return False
-        else:
-            self.items.append(val)
-            self.hash_map[val] = len(self.items) - 1
-            return True
+    def serialize(self, root):
+        """Encodes a tree to a single string.
+        
+        :type root: TreeNode
+        :rtype: str
+        """
+        ans = []
+        
+        if root == None:
+            return str(ans)
+        
+        q = deque()
+        q.append(root)
+        
+        while len(q) != 0:
+            node = q.popleft()
+            if node != None:
+                ans.append(node.val)
+                q.append(node.left)
+                q.append(node.right)
+            else:
+                ans.append(None)
+        
+        return str(ans)
+            
+        
 
-    def remove(self, val: int) -> bool:
-        if val not in self.hash_map:
-            return False
-        else:
-            position = self.hash_map.pop(val)
-            last_item = self.items.pop()
-            if last_item != val:
-                self.items[position] = last_item
-                self.hash_map[last_item] = position
-            return True
+    def deserialize(self, data):
+        """Decodes your encoded data to tree.
+        
+        :type data: str
+        :rtype: TreeNode
+        """
+        data = eval(data)
+        
+        if len(data) == 0:
+            return None
+        
+        data = data[::-1]
+        
+        root = TreeNode(data.pop())
+        q = deque([root])
+        
+        while len(q) != 0:
+            node = q.popleft()
 
-    def getRandom(self) -> int:
-        return random.choice(self.items)
+            if node != None:
+                left = data.pop()
+                if left != None:
+                    left_node = TreeNode(left)
+                    node.left = left_node
+                    q.append(left_node)
+                
+                right = data.pop()
+                if right != None:
+                    right_node = TreeNode(right)
+                    node.right = right_node
+                    q.append(right_node)
+        
+        return root
+        
 
-
-# Your RandomizedSet object will be instantiated and called as such:
-# obj = RandomizedSet()
-# param_1 = obj.insert(val)
-# param_2 = obj.remove(val)
-# param_3 = obj.getRandom()
+# Your Codec object will be instantiated and called as such:
+# ser = Codec()
+# deser = Codec()
+# ans = deser.deserialize(ser.serialize(root))

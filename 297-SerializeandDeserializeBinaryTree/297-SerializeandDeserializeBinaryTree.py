@@ -1,3 +1,4 @@
+// Last updated: 3/20/2025, 10:03:41 PM
 # Definition for a binary tree node.
 # class TreeNode(object):
 #     def __init__(self, x):
@@ -13,23 +14,24 @@ class Codec:
         :type root: TreeNode
         :rtype: str
         """
-        ans = []
-        
+
         if root == None:
-            return str(ans)
+            return "None"
         
-        q = [root]
+        ans = []
+        q = deque()
+        q.append(root)
         
         while len(q) != 0:
-            node = q.pop(0)
+            node = q.popleft()
             if node != None:
-                ans.append(node.val)
+                ans.append(str(node.val))
                 q.append(node.left)
                 q.append(node.right)
             else:
-                ans.append(None)
+                ans.append("None")
         
-        return str(ans)
+        return ','.join(ans)
             
         
 
@@ -39,25 +41,26 @@ class Codec:
         :type data: str
         :rtype: TreeNode
         """
-        data = eval(data)
-        
-        if len(data) == 0:
+
+        if data == "None":
             return None
-        
-        root = TreeNode(data.pop(0))
-        q = [root]
+
+        data = deque(map(lambda x: None if x == "None" else int(x), data.split(",")))
+
+        root = TreeNode(data.popleft())
+        q = deque([root])
         
         while len(q) != 0:
-            node = q.pop(0)
+            node = q.popleft()
 
             if node != None:
-                left = data.pop(0)
+                left = data.popleft()
                 if left != None:
                     left_node = TreeNode(left)
                     node.left = left_node
                     q.append(left_node)
                 
-                right = data.pop(0)
+                right = data.popleft()
                 if right != None:
                     right_node = TreeNode(right)
                     node.right = right_node

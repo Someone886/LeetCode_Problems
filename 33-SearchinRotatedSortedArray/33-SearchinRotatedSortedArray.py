@@ -1,4 +1,4 @@
-# Last updated: 4/4/2025, 10:27:40 PM
+# Last updated: 4/4/2025, 10:27:57 PM
 class Solution:
     def search(self, nums: List[int], target: int) -> int:
         l = 0

@@ -1,2 +1,2 @@
 # LeetCode_Problems
-Just a repo to sync LeetCode submissions lol
+Just a repo to sync LeetCode submissions.

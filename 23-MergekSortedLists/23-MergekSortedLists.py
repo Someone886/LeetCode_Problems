@@ -1,4 +1,4 @@
-# Last updated: 4/7/2025, 12:30:44 AM
+# Last updated: 4/7/2025, 12:36:55 AM
 # Definition for singly-linked list.
 # class ListNode:
 #     def __init__(self, val=0, next=None):
@@ -13,7 +13,6 @@ class Solution:
             return None
 
         val_map = {}
-        node_map = {}
         heap = []
         k = len(lists)
         dummy_head = ListNode()
@@ -21,28 +20,25 @@ class Solution:
         
         order = 0
 
-        while True:
-            for i in range(k):
-                if i not in node_map:
-                    node_map[i] = lists[i]
-                
-                node = node_map[i]
-                if node == None:
-                    continue
-                    
-                order += 1
-                pair = (node.val, order, node)
-                heapq.heappush(heap, pair)
+        for i in range(k):
+            node = lists[i]
+            if node == None:
+                continue
 
-                node_map[i] = node.next
-            
-            if not heap:
-                break
+            pair = (node.val, order, node)
+            order += 1
+            heapq.heappush(heap, pair)
 
+        while heap:
             next_node_val, _, next_node = heapq.heappop(heap)
 
             curr.next = next_node
             curr = curr.next
+
+            if next_node.next != None:
+                pair = (next_node.next.val, order, next_node.next)
+                order += 1
+                heapq.heappush(heap, pair)
         
         return dummy_head.next
         

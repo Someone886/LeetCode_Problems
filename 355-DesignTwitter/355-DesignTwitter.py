@@ -1,60 +1,38 @@
-# Last updated: 4/8/2025, 11:22:01 PM
-class Twitter:
+# Last updated: 4/9/2025, 2:56:20 AM
+class MedianFinder:
 
     def __init__(self):
-        self.user_tweets = {}
-        self.user_following = {}
-        self.order = 0
+        self.min_heap = []
+        self.max_heap = []
 
-    def postTweet(self, userId: int, tweetId: int) -> None:
-        if userId not in self.user_tweets:
-            self.user_tweets[userId] = []
-        self.user_tweets[userId].append([self.order, tweetId])
-        self.order += 1
+    def addNum(self, num: int) -> None:
+        if not self.min_heap and not self.max_heap:
+            heapq.heappush(self.min_heap, num)
+            return
 
-    def getNewsFeed(self, userId: int) -> List[int]:
-        sourses = None
-        if userId not in self.user_following:
-            sourses = [userId]
+        elif len(self.min_heap) > len(self.max_heap):
+            heapq.heappush(self.max_heap, -num)
+
+        # len(self.max_heap) >= len(self.min_heap)
         else:
-            sourses = self.user_following[userId]
-        
-        heap = []
-        cnt = 0
+            heapq.heappush(self.min_heap, num)
 
-        for sourseId in sourses:
-            if sourseId in self.user_tweets:
-                for tweet in self.user_tweets[sourseId]:
-                    heapq.heappush(heap, tweet)
-                    cnt += 1
-                    
-                    if cnt > 10:
-                        heapq.heappop(heap)
-                        cnt -= 1
-        
-        ans = []
-        for i in range(cnt):
-            ans.append(heapq.heappop(heap)[1])
-        
-        return ans[::-1]
+        # rebalance so that max of max_heap < min of min_heap
+        while -self.max_heap[0] > self.min_heap[0]:
+            max_of_max = heapq.heappushpop(self.max_heap, -heapq.heappop(self.min_heap))
+            heapq.heappush(self.min_heap, -max_of_max)
 
-    def follow(self, followerId: int, followeeId: int) -> None:
-        if followerId not in self.user_following:
-            self.user_following[followerId] = set()
-            self.user_following[followerId].add(followerId)
-
-        self.user_following[followerId].add(followeeId)
-
-    def unfollow(self, followerId: int, followeeId: int) -> None:
-        if followerId != followeeId:
-            if followerId in self.user_following.keys():
-                self.user_following[followerId].discard(followeeId)
+    def findMedian(self) -> float:
+        if len(self.min_heap) > len(self.max_heap):
+            return self.min_heap[0]
+        elif len(self.max_heap) > len(self.min_heap):
+            return -self.max_heap[0]
+        else:
+            return (self.min_heap[0] - self.max_heap[0]) / 2
         
 
 
-# Your Twitter object will be instantiated and called as such:
-# obj = Twitter()
-# obj.postTweet(userId,tweetId)
-# param_2 = obj.getNewsFeed(userId)
-# obj.follow(followerId,followeeId)
-# obj.unfollow(followerId,followeeId)
+# Your MedianFinder object will be instantiated and called as such:
+# obj = MedianFinder()
+# obj.addNum(num)
+# param_2 = obj.findMedian()

@@ -1,28 +1,22 @@
+# Last updated: 4/10/2025, 6:59:56 PM
 class Solution:
     def subsets(self, nums: List[int]) -> List[List[int]]:
-        n = len(nums)
+        if len(nums) == 0:
+            return [[]]
+        
         ans = []
-        
-        if n == 0:
-            ans.append([])
-            return ans
-        
-        def helper(left, length, subset):
-            
-            if length == 0:
+        n = len(nums)
+        subset = []
+
+        def helper(index):
+            if index >= n:
                 ans.append(subset.copy())
                 return
-            
-            for index in range(len(left)):
-                element = left[index]
-                left_left = left[index+1:]
-                subset.append(element)
-                helper(left_left, length - 1, subset)
-                subset.pop(-1)
-            
-            return
+
+            subset.append(nums[index])
+            helper(index + 1)
+            subset.pop()
+            helper(index + 1)
         
-        for i in range(0, len(nums) + 1):
-            helper(nums, i, [])
-            
+        helper(0)
         return ans

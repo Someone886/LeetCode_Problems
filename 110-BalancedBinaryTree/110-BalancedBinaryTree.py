@@ -1,4 +1,4 @@
-# Last updated: 4/10/2025, 1:11:10 AM
+# Last updated: 4/10/2025, 1:27:05 AM
 # Definition for a binary tree node.
 # class TreeNode:
 #     def __init__(self, val=0, left=None, right=None):
@@ -7,24 +7,17 @@
 #         self.right = right
 class Solution:
     def isBalanced(self, root: Optional[TreeNode]) -> bool:
-        if root == None:
-            return True
-        
-        res = True
-
-        def max_length(node, depth):
-            nonlocal res
-
+        def dfs(node):
             if node == None:
-                return depth
+                return [True, 0]
             
-            left_max = max_length(node.left, depth)
-            right_max = max_length(node.right, depth)
-
-            if left_max > right_max + 1 or right_max > left_max + 1:
-                res = False
-            
-            return 1 + max(left_max, right_max)
+            left, right = dfs(node.left), dfs(node.right)
+            balanced = True
+            if left[0] == False or right[0] == False:
+                balanced = False
+            if abs(left[1] - right[1]) > 1:
+                balanced = False
         
-        max_length(root, 0)
-        return res
+            return [balanced, 1 + max(left[1], right[1])]
+        
+        return dfs(root)[0]

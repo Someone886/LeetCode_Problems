@@ -1,4 +1,4 @@
-# Last updated: 4/10/2025, 9:44:55 PM
+# Last updated: 4/10/2025, 9:57:44 PM
 class Solution:
     def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
         if len(nums) == 0:
@@ -11,20 +11,24 @@ class Solution:
         nums.sort()
 
         def helper(index):
-            ans.append(subset.copy())
+            if index > n - 1:
+                ans.append(subset.copy())
+                return
             
-            for i in range(index + 1, len(nums)):
+            subset.append(nums[index])
+            helper(index + 1)
+            subset.pop()
 
-                # if we don't take the num at the first position (index + 1),
-                # then we should not take its duplicates either.
-                # instead, take the one after its duplicates.
+            # if we don't take the num at the first position (index),
+            # then we should not take its duplicates either.
+            # instead, take the one after its duplicates.
 
-                if i > index + 1 and nums[i] == nums[i - 1]:
-                    continue
-                subset.append(nums[i])
-                helper(i)
-                subset.pop()
+            index += 1
+            while index < n and nums[index] == nums[index - 1]:
+                index += 1
+            
+            helper(index)
         
-        helper(-1)
+        helper(0)
         return ans
         

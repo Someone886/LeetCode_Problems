@@ -1,4 +1,4 @@
-# Last updated: 4/10/2025, 9:42:07 PM
+# Last updated: 4/10/2025, 9:44:55 PM
 class Solution:
     def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
         if len(nums) == 0:
@@ -17,6 +17,8 @@ class Solution:
 
                 # if we don't take the num at the first position (index + 1),
                 # then we should not take its duplicates either.
+                # instead, take the one after its duplicates.
+
                 if i > index + 1 and nums[i] == nums[i - 1]:
                     continue
                 subset.append(nums[i])

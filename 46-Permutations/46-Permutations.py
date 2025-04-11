@@ -1,3 +1,4 @@
+# Last updated: 4/10/2025, 8:27:31 PM
 class Solution(object):
     def permute(self, nums):
         """
@@ -5,26 +6,23 @@ class Solution(object):
         :rtype: List[List[int]]
         """
         
-        n = len(nums)
         ans = []
-        
-        if n == 0:
-            return ans
-        
-        def helper(left, per):
+        comb = []
+        picked = [False] * len(nums)
+
+        def helper():
+            if len(comb) == len(nums):
+                ans.append(comb.copy())
             
-            if len(left) == 0:
-                ans.append(per.copy())
-                return
-            
-            for index in range(len(left)):
-                num = left[index]
-                per.append(num)
-                left_left = left[0:index] + left[index+1:]
-                helper(left_left, per)
-                per.pop(-1)
-            
-            return
+            for i in range(len(nums)):
+                if picked[i]:
+                    continue
+                comb.append(nums[i])
+                picked[i] = True
+                helper()
+                comb.pop()
+                picked[i] = False
         
-        helper(nums, [])
+        helper()
         return ans
+        

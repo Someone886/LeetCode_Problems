@@ -1,4 +1,4 @@
-# Last updated: 4/13/2025, 4:23:00 PM
+# Last updated: 4/13/2025, 4:29:05 PM
 class Solution:
     def canPartition(self, nums: List[int]) -> bool:
         summation = sum(nums)
@@ -15,7 +15,8 @@ class Solution:
                 if s + num == target:
                     return True
                 next_dp.add(s)
-                next_dp.add(s + num)
+                if s + num < target:
+                    next_dp.add(s + num)
             dp = next_dp
         
         return False

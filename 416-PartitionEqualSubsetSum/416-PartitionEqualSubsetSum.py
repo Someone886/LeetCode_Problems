@@ -1,4 +1,4 @@
-# Last updated: 4/13/2025, 4:10:09 PM
+# Last updated: 4/13/2025, 4:12:00 PM
 class Solution:
     def canPartition(self, nums: List[int]) -> bool:
         summation = sum(nums)
@@ -11,7 +11,6 @@ class Solution:
         dp = [[-1] * target for _ in range(n)]
 
         def helper(index, curr_sum):
-
             if curr_sum == target:
                 return True
             
@@ -21,8 +20,7 @@ class Solution:
             if dp[index][curr_sum] != -1:
                 return dp[index][curr_sum]
             
-            dp[index][curr_sum] = helper(index + 1, curr_sum) or\
-                                    helper(index + 1, curr_sum + nums[index])
+            dp[index][curr_sum] = helper(index + 1, curr_sum + nums[index]) or helper(index + 1, curr_sum)
             
             return dp[index][curr_sum]
         

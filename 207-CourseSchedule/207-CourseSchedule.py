@@ -1,4 +1,4 @@
-# Last updated: 4/15/2025, 1:46:58 AM
+# Last updated: 4/15/2025, 8:42:37 AM
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
         pre_map = defaultdict(list)
@@ -7,8 +7,8 @@ class Solution:
             pre_map[crs].append(pre)
         
         already_visited = {}
-        # if crs: true, then already visited and processed -> if seen again, then a loop
-        # if crs: false, then its prerequisites are being visited -> if seen again, then pause
+        # if crs: false, then its prerequisites are being visited in this batch -> if seen again, then a loop
+        # if crs: true, then its already visited and processed -> if seen again, then landed at a safe node
 
         def dfs(crs):
             if crs in already_visited:

@@ -1,4 +1,4 @@
-# Last updated: 4/15/2025, 8:42:37 AM
+# Last updated: 4/15/2025, 8:47:09 AM
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
         pre_map = defaultdict(list)

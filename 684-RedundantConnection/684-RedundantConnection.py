@@ -1,54 +1,48 @@
-# Last updated: 4/15/2025, 9:15:03 PM
+# Last updated: 4/15/2025, 9:51:40 PM
 class Solution:
     def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
-        adj = defaultdict(list)
+        # At first, each node's parent is itself
+        parents = [i for i in range(len(edges) + 1)]
 
-        index = 0
-        for n1, n2 in edges:
-            adj[n1].append([n2, index])
-            adj[n2].append([n1, index])
-            index += 1
+        # Put the subtree with less nodes to the subtree with more nodes to form a larger subtree
+        node_cnts = [1] * (len(edges) + 1)
         
-        visited = set()
-        path = []
+        # To make the tree flat
+        def find(n): 
+            parent = parents[n]
+            # 1. while n -> parent -> parents[parent]
+            # 2. then make parent and parents[parent] the same level: 
+            #    n -> parent (sibling with) parents[parent] -> parents[parents[parent]]
+            # 3. move 1 level up: parent now points to parents[parent]
+            # 4. n -> root parent (another node or itself), and return root parent
 
-        def dfs(node, prev, order):
-            path.append([prev, node, order])
-
-            if node in visited:
-                return True
-
-            visited.add(node)
-
-            for neighbor, i in adj[node]:
-                if neighbor != prev:
-                    if dfs(neighbor, node, i):
-                        return True
+            while parent != parents[parent]: # 1
+                parents[parent] = parents[parents[parent]] # 2
+                parent = parents[parent] # 3
             
-            path.pop()
-            return False
+            # parents[n] = parent
+
+            return parent # 4
         
-        dfs(1, 0, -1)
+        def union(n1, n2):
+            parent_1, parent_2 = find(n1), find(n2)
+            
+            # If two nodes point to the same root, then a cycle forms.
+            if parent_1 == parent_2:
+                return False
+            
+            # parent with less node cnt -> parent with more node cnt
+            # then update node cnt in the bigger subtree
+            if node_cnts[parent_1] > node_cnts[parent_2]:
+                parents[parent_2] = parent_1
+                node_cnts[parent_1] += node_cnts[parent_2]
+            
+            else:
+                parents[parent_1] = parent_2
+                node_cnts[parent_2] += node_cnts[parent_1]
+
+            return True
         
-        cycle_end, cycle_start, _ = path[-1]
-        in_cycle = False
-
-        ans = path[0][0:2]
-        max_order = path[0][2]
-        
-        # print(path)
-
-        for i in range(1, len(path)):
-            node, prev, order = path[i]
-
-            if node == cycle_start:
-                in_cycle = True
-
-            if not in_cycle:
-                continue
-
-            if order > max_order:
-                ans = [node, prev]
-                max_order = order
-
-        return [ans[0], ans[1]] if ans[0] < ans[1] else [ans[1], ans[0]]
+        for n1, n2 in edges:
+            if not union(n1, n2):
+                return [n1, n2]

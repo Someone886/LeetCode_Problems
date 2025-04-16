@@ -1,4 +1,4 @@
-# Last updated: 4/16/2025, 8:14:33 AM
+# Last updated: 4/16/2025, 8:17:29 AM
 class Solution:
     def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
         if endWord not in wordList:
@@ -17,8 +17,6 @@ class Solution:
         diff = 1
 
         while q:
-            diff += 1
-
             for i in range(len(q)):
                 next_word = q.popleft()
 
@@ -27,10 +25,13 @@ class Solution:
 
                     for neighbor in neighbors[pattern]:
                         if neighbor == endWord:
-                            return diff
+                            return diff + 1
 
                         if neighbor not in visited:
                             visited.add(neighbor)
                             q.append(neighbor)
+            
+            diff += 1
 
         return 0
+        

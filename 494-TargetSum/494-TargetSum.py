@@ -1,15 +1,12 @@
-# Last updated: 4/16/2025, 8:07:44 PM
+# Last updated: 4/16/2025, 8:10:57 PM
 class Solution:
     def findTargetSumWays(self, nums: List[int], target: int) -> int:
         dp = {}
         n = len(nums)
 
         def dfs(index, summation):
-            if index >= n:
-                if summation == target:
-                    return 1
-                else:
-                    return 0
+            if index == n:
+                return 1 if summation == target else 0
             
             if (index, summation) in dp:
                 return dp[(index, summation)]
@@ -20,6 +17,5 @@ class Solution:
             return dp[(index, summation)]
         
         ans = dfs(0, 0)
-        print(dp)
 
         return ans

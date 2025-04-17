@@ -1,4 +1,4 @@
-# Last updated: 4/16/2025, 9:03:55 PM
+# Last updated: 4/16/2025, 9:04:11 PM
 class Solution:
     def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
         if len(s3) != len(s1) + len(s2):

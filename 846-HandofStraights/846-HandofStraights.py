@@ -1,27 +1,20 @@
-# Last updated: 4/18/2025, 7:29:39 PM
+# Last updated: 4/18/2025, 7:57:03 PM
 class Solution:
     def isNStraightHand(self, hand: List[int], groupSize: int) -> bool:
-        hand.sort()
-        groups = [[] for i in range(len(hand) // groupSize)]
+        hash_map = Counter(hand)
+        keys = list(hash_map.keys())
+        heapq.heapify(keys)
 
-        for num in hand:
-            classified = False
+        while keys:
+            start = keys[0]
 
-            for group in groups:
-                if len(group) == groupSize:
-                    continue
+            for i in range(groupSize):
+                if start + i not in hash_map or hash_map[start + i] == 0:
+                    return False
                 
-                if len(group) == 0:
-                    group.append(num)
-                    classified = True
-                    break
-                
-                elif num == group[-1] + 1:
-                    group.append(num)
-                    classified = True
-                    break
+                hash_map[start + i] -= 1
             
-            if not classified:
-                return False
-            
+            while keys and hash_map[keys[0]] == 0:
+                heapq.heappop(keys)
+        
         return True

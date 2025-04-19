@@ -1,24 +1,23 @@
+# Last updated: 4/19/2025, 4:59:18 PM
 class Solution:
     def isHappy(self, n: int) -> bool:
-        seen = set()
-        
-        while True:
-            if n in seen:
-                break
+        slow, fast = n, n
+        first = True
+
+        while first or slow != fast:
+            first = False
             
-            seen.add(n)
-            
-            n_copy = n
-            new_n = 0
-            
-            while n_copy != 0:
-                new_n += (n_copy % 10) ** 2
-                
-                n_copy = n_copy // 10
-            
-            if new_n == 1:
-                return True
-            
-            n = new_n
-            
-        return False
+            fast = self.sumOfSquares(fast)
+            fast = self.sumOfSquares(fast)
+            slow = self.sumOfSquares(slow)
+        return True if fast == 1 else False
+    
+    def sumOfSquares(self, n: int) -> int:
+        output = 0
+
+        while n:
+            digit = n % 10
+            digit = digit ** 2
+            output += digit
+            n = n // 10
+        return output

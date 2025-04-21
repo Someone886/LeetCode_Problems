@@ -1,4 +1,4 @@
-# Last updated: 4/21/2025, 1:32:55 AM
+# Last updated: 4/21/2025, 1:36:54 AM
 class Solution:
     def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
         edges = collections.defaultdict(list)
@@ -11,6 +11,9 @@ class Solution:
         visit = set()
         t = 0   # result to be returned -> total length
 
+        # everytime adds the shortest node from the start node k to the explored graph
+        # after exploring node i, add its neighbors to the heap
+        # ~ BFS
         while min_heap:
             w_1, n_1 = heapq.heappop(min_heap)
             if n_1 in visit:

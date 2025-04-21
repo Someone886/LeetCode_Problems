@@ -1,4 +1,4 @@
-# Last updated: 4/21/2025, 1:30:32 AM
+# Last updated: 4/21/2025, 1:32:55 AM
 class Solution:
     def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
         edges = collections.defaultdict(list)
@@ -22,6 +22,6 @@ class Solution:
 
             for neighbor, weight in edges[n_1]:
                 if neighbor not in visit:
-                    heapq.heappush(min_heap, (w_1 + weight, neighbor))
+                    heapq.heappush(min_heap, (t + weight, neighbor))
         
         return t if len(visit) == n else -1

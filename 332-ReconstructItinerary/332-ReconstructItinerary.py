@@ -1,29 +1,25 @@
 class Solution:
-    def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
-        edges = collections.defaultdict(list)
+    def findItinerary(self, tickets: List[List[str]]) -> List[str]:
+        adj = defaultdict(list)
 
-        for u, v, t in times:
-            edges[u].append((v, t))
+        # sort tickets now for lexicographical order
+        # destinations are stored in descending lexicographical order
+        # when we later do adj[src].pop(),
+        # we’ll be removing and visiting the smallest remaining destination.
+        for ticket in sorted(tickets)[::-1]:
+            adj[ticket[0]].append(ticket[1])
         
-        # min_heap keeps len(path) to the node i from the start node k
-        min_heap = [(0, k)]
-        visit = set()
-        t = 0   # result to be returned -> total length
+        res = []
 
-        # everytime adds the shortest node from the start node k to the explored graph
-        # after exploring node i, add its neighbors to the heap
-        # ~ BFS
-        while min_heap:
-            w_1, n_1 = heapq.heappop(min_heap)
-            if n_1 in visit:
-                continue
-            else:
-                visit.add(n_1)
+        def dfs(src):
+            while adj[src]:
+                next_stop = adj[src].pop()
+                dfs(next_stop)
             
-            t = w_1
-
-            for neighbor, weight in edges[n_1]:
-                if neighbor not in visit:
-                    heapq.heappush(min_heap, (t + weight, neighbor))
+            # Note that a dead end always be visited last
+            # if src is an dead end, then the algorithm will always stop at src first
+            # so src would be appended to res first to be reversed later
+            res.append(src)
         
-        return t if len(visit) == n else -1
+        dfs("JFK")
+        return res[::-1]

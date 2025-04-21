@@ -22,9 +22,10 @@ Explanation: Another possible reconstruction is ["JFK","SFO","ATL","JFK","ATL","
 
 Constraints:
 
-1 <= tickets.length <= 300
-tickets[i].length == 2
-from_i.length == 3
-to_i.length == 3
-from_i and to_i consist of uppercase English letters.
-from_i != to_i
+
+    1 <= tickets.length <= 300
+    tickets[i].length == 2
+    from_i.length == 3
+    to_i.length == 3
+    from_i and to_i consist of uppercase English letters.
+    from_i != to_i

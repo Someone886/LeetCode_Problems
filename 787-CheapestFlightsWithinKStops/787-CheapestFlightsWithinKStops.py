@@ -1,19 +1,27 @@
-# Last updated: 4/22/2025, 6:44:27 PM
+# Last updated: 4/22/2025, 6:55:00 PM
 class Solution:
     def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:
-        # Bellman-Ford algorithm that can intuitively handle the k stops condition.
-        prices = [float("inf")] * n
-        prices[src] = 0
-
-        for i in range(k + 1):
-            # modify new_prices 
-            # so that only destinations within i stops from src (which are reachable) are updated
-            new_prices = prices.copy()
-
-            for start, end, price in flights:
-                if prices[start] + price < new_prices[end]:
-                    new_prices[end] = prices[start] + price
-
-            prices = new_prices
+        edges = defaultdict(list)
+        for start, end, price in flights:
+            edges[start].append((end, price))
         
-        return -1 if prices[dst] == float("inf") else prices[dst]
+        q = deque()
+        # dp in q: node, cost to reach this node from src, stop count
+        q.append([src, 0, -1])
+        cost = float('inf')
+
+        costs = [float('inf')] * n
+        costs[src] = 0
+
+        while q:
+            start, cost_so_far, stop = q.popleft()
+            if stop >= k:
+                continue
+
+            for neighbor, price in edges[start]:
+                new_cost = cost_so_far + price
+                if new_cost < costs[neighbor]:
+                    costs[neighbor] = new_cost
+                    q.append([neighbor, new_cost, stop + 1])
+        
+        return -1 if costs[dst] == float("inf") else costs[dst]

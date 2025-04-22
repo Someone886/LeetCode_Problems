@@ -1,4 +1,4 @@
-# Last updated: 4/22/2025, 4:53:26 AM
+# Last updated: 4/22/2025, 5:15:37 AM
 class Solution:
     def swimInWater(self, grid: List[List[int]]) -> int:
         n = len(grid)
@@ -26,4 +26,13 @@ class Solution:
                     heapq.heappush(heap, (max(max_water, grid[x + dx][y + dy]), x + dx, y + dy))
         
         return max_water
-        
+
+'''
+issue with DFS + DP:
+19 20
+7  6
+Suppose we are at 7, we mark 7 as visited and explore 19 and 6 as the next node. 
+Now we are at 19, the only path to get to 6 is 19 -> 20 -> 6, marking node 19 with max cost = 20.
+However, at 19, the correct path is 19 -> 7 -> 6 with max cost = 19.
+But since we already marked 7, we blocked the revisiting of 7 from 19.
+'''

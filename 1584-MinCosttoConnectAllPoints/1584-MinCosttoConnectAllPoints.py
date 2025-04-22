@@ -1,18 +1,18 @@
-# Last updated: 4/22/2025, 2:31:17 AM
+# Last updated: 4/22/2025, 2:37:13 AM
 class Solution:
     def minCostConnectPoints(self, points: List[List[int]]) -> int:
         edges = []
-        heapq.heapify(edges)
-
         recorded_points = []
 
         for point in points:
             for i in range(len(recorded_points)):
                 recorded_point = recorded_points[i]
                 dist = abs(point[0] - recorded_point[0]) + abs(point[1] - recorded_point[1])
-                heapq.heappush(edges, (dist, i, len(recorded_points)))
+                edges.append((dist, i, len(recorded_points)))
             recorded_points.append(point)
         
+        edges.sort()
+
         n = len(recorded_points)
         parents = [i for i in range(n)]
         size = [1] * n
@@ -40,16 +40,11 @@ class Solution:
             return True
         
         total_length = 0
-        visited = set()
 
-        while edges:
-            dist, u, v = heapq.heappop(edges)
-
+        for dist, u, v in edges:
             if not union(u, v):
                 continue
             else:
-                visited.add(u)
-                visited.add(v)
                 total_length += dist
 
         return total_length

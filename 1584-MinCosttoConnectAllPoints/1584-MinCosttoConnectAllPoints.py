@@ -1,26 +1,25 @@
-# Last updated: 4/22/2025, 2:48:50 AM
+# Last updated: 4/22/2025, 4:22:48 AM
 class Solution:
-    def minCostConnectPoints(self, points: List[List[int]]) -> int:
-        total = 0
-        heap = [(0, 0)]
+    def swimInWater(self, grid: List[List[int]]) -> int:
+        n = len(grid)
+    
+        # heap point = grid[x][y], x, y
+        heap = [(grid[0][0], 0, 0)]
         heapq.heapify(heap)
         visited = set()
 
-        while len(visited) < len(points):
-            dist, pt = heapq.heappop(heap)
-            if pt in visited:
+        max_water = 0
+        dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        while (n - 1, n - 1) not in visited:
+            water, x, y = heapq.heappop(heap)
+            if (x, y) in visited:
                 continue
             
-            visited.add(pt)
-            total += dist
-            x, y = points[pt][0], points[pt][1]
+            visited.add((x, y))
+            max_water = max(water, max_water)
 
-            for i in range(len(points)):
-                if i in visited:
-                    continue
-                
-                x_j, y_j = points[i][0], points[i][1]
-                next_dist = abs(x - x_j) + abs(y - y_j)
-                heapq.heappush(heap, (next_dist, i))
+            for dx, dy in dirs:
+                if 0 <= x + dx < n and 0 <= y + dy < n and (x + dx, y + dy) not in visited:
+                    heapq.heappush(heap, (grid[x + dx][y + dy], x + dx, y + dy))
         
-        return total
+        return max_water

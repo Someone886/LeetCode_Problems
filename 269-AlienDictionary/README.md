@@ -13,7 +13,9 @@ Example 1:
 Input: ["z","o"]
 
 Output: "zo"
+
 Explanation:
+
     From "z" and "o", we know 'z' < 'o', so return "zo".
 
 Example 2:
@@ -21,6 +23,7 @@ Example 2:
 Input: ["hrn","hrf","er","enn","rfnn"]
 
 Output: "hernf"
+
 Explanation:
 
     from "hrn" and "hrf", we know 'n' < 'f'

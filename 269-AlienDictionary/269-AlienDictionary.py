@@ -33,3 +33,10 @@ class Solution:
             res.append(char)
 
             return False
+        
+        for key in adj:
+            if dfs(key):
+                return ""
+
+        res.reverse()
+        return "".join(res)

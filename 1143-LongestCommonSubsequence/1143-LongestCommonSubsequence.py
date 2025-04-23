@@ -1,27 +1,15 @@
-# Last updated: 4/16/2025, 6:16:51 PM
 class Solution:
-    def maxProfit(self, prices: List[int]) -> int:
-        if len(prices) == 0 or len(prices) == 1:
-            return 0
-        
-        n = len(prices)
-        dp = [-1] * n
+    def longestCommonSubsequence(self, text1: str, text2: str) -> int:
+        len_1 = len(text1)
+        len_2 = len(text2)
 
-        def helper(buy_day):
-            if buy_day >= n:
-                return 0
-            
-            if dp[buy_day] != -1:
-                return dp[buy_day]
-            
-            cost = -prices[buy_day]
-            profit = 0
-            for i in range(buy_day + 1, n):
-                profit = max(profit, cost + prices[i] + helper(i + 2))
-            
-            profit = max(profit, helper(buy_day + 1))
-            
-            dp[buy_day] = profit
-            return dp[buy_day]
+        dp = [[0] * (len_2 + 1) for _ in range(len_1 + 1)]
+
+        for i in range(1, len_1 + 1):
+            for j in range(1, len_2 + 1):
+                if text1[i - 1] == text2[j - 1]:
+                    dp[i][j] = 1 + dp[i - 1][j - 1]
+                else:
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
         
-        return helper(0)
+        return dp[len_1][len_2]

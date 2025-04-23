@@ -1,19 +1,25 @@
-# Last updated: 4/19/2025, 5:27:49 PM
 class Solution:
-    def myPow(self, x: float, n: int) -> float:
-        if x == 0:
-            return 0
+    def isHappy(self, n: int) -> bool:
+        slow, fast = n, n
+        fast = self.sumOfSquares(fast)
+        fast = self.sumOfSquares(fast)
 
-        if n == 0:
-            return 1
-        
-        ans = 1
-        power = abs(n)
+        while slow != fast:
+            if fast == 1:
+                return True
+            
+            fast = self.sumOfSquares(fast)
+            fast = self.sumOfSquares(fast)
+            slow = self.sumOfSquares(slow)
 
-        while power:
-            if power % 2 == 1:
-                ans *= x
-            x *= x
-            power = power // 2
-        
-        return ans if n > 0 else 1 / ans
+        return True if fast == 1 else False
+    
+    def sumOfSquares(self, n: int) -> int:
+        output = 0
+
+        while n:
+            digit = n % 10
+            digit = digit ** 2
+            output += digit
+            n = n // 10
+        return output

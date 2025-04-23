@@ -1,74 +1,37 @@
-# Last updated: 4/12/2025, 1:50:00 AM
-class Solution:
-    def solveNQueens(self, n: int) -> List[List[str]]:
-        board = [[0] * n for _ in range(n)]
-        ans = []
-        curr = []
-
-        def remove_cells(r, c, board):
-            for i in range(n):
-                board[r][i] += 1
-                board[i][c] += 1
-            
-            r_copy, c_copy = r - 1, c + 1
-            while 0 <= r_copy < n and 0 <= c_copy < n:
-                board[r_copy][c_copy] += 1
-                r_copy, c_copy = r_copy - 1, c_copy + 1
-            
-            r_copy, c_copy = r - 1, c - 1
-            while 0 <= r_copy < n and 0 <= c_copy < n:
-                board[r_copy][c_copy] += 1
-                r_copy, c_copy = r_copy - 1, c_copy - 1
-            
-            r_copy, c_copy = r + 1, c + 1
-            while 0 <= r_copy < n and 0 <= c_copy < n:
-                board[r_copy][c_copy] += 1
-                r_copy, c_copy = r_copy + 1, c_copy + 1
-            
-            r_copy, c_copy = r + 1, c - 1
-            while 0 <= r_copy < n and 0 <= c_copy < n:
-                board[r_copy][c_copy] += 1
-                r_copy, c_copy = r_copy + 1, c_copy - 1
+class Solution(object):
+    def letterCombinations(self, digits):
+        """
+        :type digits: str
+        :rtype: List[str]
+        """
+        hash_map = {'2': ['a', 'b', 'c'],
+                    '3': ['d', 'e', 'f'],
+                    '4': ['g', 'h', 'i'],
+                    '5': ['j', 'k', 'l'],
+                    '6': ['m', 'n', 'o'],
+                    '7': ['p', 'q', 'r', 's'],
+                    '8': ['t', 'u', 'v'],
+                    '9': ['w', 'x', 'y', 'z']
+                    }
         
-        def release_cells(r, c, board):
-            for i in range(n):
-                board[r][i] -= 1
-                board[i][c] -= 1
-            
-            r_copy, c_copy = r - 1, c + 1
-            while 0 <= r_copy < n and 0 <= c_copy < n:
-                board[r_copy][c_copy] -= 1
-                r_copy, c_copy = r_copy - 1, c_copy + 1
-            
-            r_copy, c_copy = r - 1, c - 1
-            while 0 <= r_copy < n and 0 <= c_copy < n:
-                board[r_copy][c_copy] -= 1
-                r_copy, c_copy = r_copy - 1, c_copy - 1
-            
-            r_copy, c_copy = r + 1, c + 1
-            while 0 <= r_copy < n and 0 <= c_copy < n:
-                board[r_copy][c_copy] -= 1
-                r_copy, c_copy = r_copy + 1, c_copy + 1
-            
-            r_copy, c_copy = r + 1, c - 1
-            while 0 <= r_copy < n and 0 <= c_copy < n:
-                board[r_copy][c_copy] -= 1
-                r_copy, c_copy = r_copy + 1, c_copy - 1
+        ans = []
 
-        def helper(cnt):
-            if cnt == n:
-                ans.append(curr.copy())
+        if len(digits) == 0:
+            return ans
+
+        n = len(digits)
+
+        def dfs(cur_index, string):
+            if cur_index == n:
+                ans.append(string)
                 return
             
-            for col in range(n):
-                if board[cnt][col] == 0:
-                    remove_cells(cnt, col, board)
-                    curr.append('.' * col + 'Q' + '.' * (n - 1 - col))
-
-                    helper(cnt + 1)
-
-                    release_cells(cnt, col, board)
-                    curr.pop()
+            possible_digits = hash_map[digits[cur_index]]
+            for d in possible_digits:
+                dfs(cur_index + 1, string + d)
+            
+            return
         
-        helper(0)
+        dfs(0, '')
+
         return ans

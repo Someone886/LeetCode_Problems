@@ -12,7 +12,6 @@ class Solution:
         if lists == None or len(lists) == 0:
             return None
 
-        val_map = {}
         heap = []
         k = len(lists)
         dummy_head = ListNode()

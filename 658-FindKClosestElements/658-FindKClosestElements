@@ -1,0 +1,17 @@
+class Solution:
+    def findClosestElements(self, arr: List[int], k: int, x: int) -> List[int]:
+        lo, hi = 0, len(arr) - k
+
+        # find the smallest lo so that window [lo…lo+k-1] is the best
+        while lo < hi:
+            mid = (lo + hi) // 2
+        
+            # compare distance of arr[mid] vs arr[mid+k] to x
+            # want to make x in the middle of [lo, lo + k]
+            # if x is closer to arr[mid + k] than x, or x is still to the right of arr[mid + k]
+            if x - arr[mid] > arr[mid + k] - x: 
+                lo = mid + 1 # then we move lo to mid + 1
+            else:
+                hi = mid
+        
+        return arr[lo : lo + k]

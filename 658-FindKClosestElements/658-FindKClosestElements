@@ -9,7 +9,7 @@ class Solution:
             # compare distance of arr[mid] vs arr[mid+k] to x
             # want to make x in the middle of [lo, lo + k]
             # if x is closer to arr[mid + k] than x, or x is still to the right of arr[mid + k]
-            if x - arr[mid] > arr[mid + k] - x: 
+            if x - arr[mid] > arr[mid + k] - x: # x > (A[mid + k] + A[mid])/2 
                 lo = mid + 1 # then we move lo to mid + 1
             else:
                 hi = mid

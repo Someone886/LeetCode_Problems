@@ -1,10 +1,14 @@
-# Last updated: 4/27/2025, 2:13:54 AM
+# Last updated: 4/27/2025, 2:17:54 AM
 class Solution:
     def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
         nums.sort()
         res, quad = [], []
 
         def k_sum(k, start, target):
+            # prunning
+            if len(nums) < k or start == len(nums) or nums[start] * k > target or nums[-1] * k < target:
+                return []
+            
             if k != 2:
                 for i in range(start, len(nums) - k + 1):
                     if i >= start + 1 and nums[i] == nums[i - 1]:

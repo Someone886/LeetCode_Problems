@@ -7,9 +7,6 @@
 #         self.right = right
 class Solution:
     def rob(self, root: Optional[TreeNode]) -> int:
-
-        #return Type:
-            #(sum_incl , sum_excl)
         def solve(root):
             if root is None:
                 return (0,0)

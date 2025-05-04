@@ -1,4 +1,4 @@
-# Last updated: 5/4/2025, 12:48:20 AM
+# Last updated: 5/4/2025, 12:50:23 AM
 class Solution:
     def search(self, nums: List[int], target: int) -> int:
         l = 0
@@ -6,13 +6,11 @@ class Solution:
 
         while l <= r:
             m = (l + r) // 2
-            
-            print(nums[l], nums[m], nums[r])
 
             if nums[m] == target:
                 return True
             
-            # if we can't tell which side is sorted, shrink both ends
+            # if we can't tell a side is sorted, shrink this side
             if nums[l] == nums[m]:
                 l += 1
             elif nums[r] == nums[m]:

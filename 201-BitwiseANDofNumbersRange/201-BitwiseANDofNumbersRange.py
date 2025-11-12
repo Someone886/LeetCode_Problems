@@ -1,4 +1,4 @@
-# Last updated: 11/12/2025, 2:27:04 AM
+# Last updated: 11/12/2025, 2:35:06 AM
 class Solution:
     def rangeBitwiseAnd(self, left: int, right: int) -> int:
         # suppose 7 to 10 
@@ -23,4 +23,17 @@ class Solution:
             if right - left < diff:
                 res = res | (1 << i)
         
-        return res    
+        return res   
+
+
+# class Solution:
+#     def rangeBitwiseAnd(self, left: int, right: int) -> int:
+#         res = 0
+#         i = 0
+
+#         while left != right:
+#             left = left >> 1
+#             right = right >> 1
+#             i += 1
+        
+#         return left << i 

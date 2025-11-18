@@ -1,4 +1,4 @@
-# Last updated: 4/17/2025, 3:46:06 AM
+# Last updated: 11/18/2025, 1:19:22 AM
 class Solution:
     def isMatch(self, s: str, p: str) -> bool:
         dp = {}
@@ -22,8 +22,7 @@ class Solution:
             
             if index_p < len(p) - 1 and p[index_p + 1] == "*":
                 if (p[index_p] == '.' or s[index_s] == p[index_p]):
-                    dp[(index_s, index_p)] = helper(index_s + 1, index_p) or\
-                                                helper(index_s + 1, index_p + 2) or\
+                    dp[(index_s, index_p)] = helper(index_s + 1, index_p) or \
                                                 helper(index_s, index_p + 2)
                 else:
                     dp[(index_s, index_p)] = helper(index_s, index_p + 2)

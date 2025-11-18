@@ -1,26 +1,19 @@
-# Last updated: 4/17/2025, 3:07:22 AM
+# Last updated: 11/18/2025, 2:59:25 AM
 class Solution:
     def maxCoins(self, nums: List[int]) -> int:
-        # DP = [left boundary][right boundary] of a subarray
-        # Pointer i = index of the last popped balloon in a subarray
-        # l, r inclusively
+        n = len(nums) + 2
+        vals = [1] + nums + [1]
+        dp = [[0] * n for _ in range(n)]
 
-        dp = {}
-        nums = [1] + nums + [1]
+        for dist in range(2, n):
+            for starting_index in range(n - dist):
+                ending_index = starting_index + dist
 
-        def helper(l, r):
-            if l > r:
-                return 0
-            
-            if (l, r) in dp:
-                return dp[(l, r)]
-            
-            dp[(l, r)] = 0
-            for i in range(l, r + 1):
-                value = nums[i] * nums[l - 1] * nums[r + 1]
-                value += helper(l, i - 1) + helper(i + 1, r)
-                dp[(l, r)] = max(dp[(l, r)], value)
-            
-            return dp[(l, r)]
+                for last_popped_index in range(starting_index + 1, ending_index):
+                    dp[starting_index][ending_index] = \
+                        max(dp[starting_index][ending_index], 
+                            dp[starting_index][last_popped_index] + \
+                                vals[starting_index] * vals[last_popped_index] * vals[ending_index] + \
+                                dp[last_popped_index][ending_index])
         
-        return helper(1, len(nums) - 2)
+        return dp[0][n-1]

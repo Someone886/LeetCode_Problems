@@ -1,28 +1,32 @@
-# Last updated: 12/26/2025, 6:23:17 PM
+# Last updated: 12/27/2025, 2:43:16 AM
 1class Solution:
-2    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
-3        if not s or len(s) == 0:
-4            return True
-5        n = len(s)
-6        dp = {}
-7
-8        def fit_words(index):
-9            if index == n:
-10                return True
-11            
-12            if index in dp:
-13                return dp[index]
-14            
-15            can_fit = False
-16            for word in wordDict:
-17                m = len(word)
-18                if s[index:index+m] == word:
-19                    can_fit = fit_words(index + m)
-20                    if can_fit:
-21                        break
-22            
-23            dp[index] = can_fit
+2    def generateParenthesis(self, n: int) -> List[str]:
+3        ans = []
+4        curr = []
+5
+6        def helper(l_left, r_left):
+7            if len(curr) == n * 2:
+8                ans.append("".join(curr))
+9                return
+10            
+11            if l_left == r_left:
+12                curr.append('(')
+13                helper(l_left - 1, r_left)
+14                curr.pop()
+15
+16            elif 0 < l_left < r_left:
+17                curr.append('(')
+18                helper(l_left - 1, r_left)
+19                curr.pop()
+20
+21                curr.append(')')
+22                helper(l_left, r_left - 1)
+23                curr.pop()
 24            
-25            return dp[index]
-26        
-27        return fit_words(0)
+25            else:
+26                curr.append(')')
+27                helper(l_left, r_left - 1)
+28                curr.pop()
+29                
+30        helper(n, n)
+31        return ans

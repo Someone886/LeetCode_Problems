@@ -1,4 +1,4 @@
-# Last updated: 1/5/2026, 1:32:34 AM
+# Last updated: 1/5/2026, 1:32:41 AM
 1# Topological sort + min_q (instead of dq for BFS)
 2
 3class Solution:

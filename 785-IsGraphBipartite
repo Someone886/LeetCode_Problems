@@ -1,0 +1,38 @@
+# Last updated: 1/4/2026, 8:33:26 PM
+1class Solution:
+2    # Every node in the graph cannot be in the same set as its neighbors
+3    def isBipartite(self, graph: List[List[int]]) -> bool:
+4        n = len(graph)
+5        visited = {}
+6
+7        def bfs(i):
+8            if i in visited:
+9                return True
+10
+11            dq = deque()
+12            if_even_set = True
+13
+14            visited[i] = if_even_set
+15            dq.append(i)
+16
+17            while dq:
+18                for _ in range(len(dq)):
+19                    node = dq.popleft()
+20                    
+21                    for neighbor in graph[node]:
+22                        if neighbor not in visited:
+23                            visited[neighbor] = ~if_even_set
+24                            dq.append(neighbor)
+25                        elif visited[neighbor] != ~if_even_set:
+26                            return False
+27                
+28                if_even_set = ~if_even_set
+29            
+30            return True
+31        
+32        for i in range(n):
+33            if not bfs(i):
+34                return False
+35        
+36        return True
+37                    

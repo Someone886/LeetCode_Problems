@@ -1,4 +1,4 @@
-# Last updated: 1/6/2026, 9:25:44 AM
+# Last updated: 1/6/2026, 9:28:11 AM
 1class Solution:
 2    def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:
 3        # 1. Build the graph
@@ -33,6 +33,8 @@
 32            
 33            if node in graph:
 34                for neighbor, add_price in graph[node]:
-35                    heapq.heappush(min_q, (price + add_price, stops + 1, neighbor))
-36
-37        return -1
+35                    if stop_map.get(neighbor, float('inf')) < stops + 1:
+36                        continue
+37                    heapq.heappush(min_q, (price + add_price, stops + 1, neighbor))
+38
+39        return -1

@@ -1,70 +1,56 @@
-# Last updated: 1/6/2026, 11:23:00 PM
+# Last updated: 1/7/2026, 12:09:55 AM
 1class Solution:
-2    def maxProfit(self, prices: List[int]) -> int:
-3        # We track four states. 'inf' ensures the first price we see 
-4        # always updates the 'min' variables.
-5        min_sf1 = float("inf")  # Best price to buy for Transaction 1
-6        min_sf2 = float("inf")  # Best "Effective Cost" to buy for Transaction 2
-7        max_p1 = 0              # Best profit after Transaction 1
-8        max_p2 = 0              # Best total profit after Transaction 2
-9        
-10        for p in prices:
-11            # --- TRANSACTION 1 ---
-12            # Logic: Find the lowest price seen so far to start our first trade.
-13            min_sf1 = min(min_sf1, p)
+2    def isMatch(self, s: str, p: str) -> bool:
+3        # dp stores results for (index_s, index_p) to avoid redundant recursive calls
+4        dp = {}
+5
+6        def helper(index_s, index_p):
+7            # BASE CASE 1: Both string and pattern are fully processed
+8            if index_s == len(s) and index_p == len(p):
+9                return True
+10            
+11            # BASE CASE 2: Pattern is exhausted, but string still has characters
+12            if index_p >= len(p):
+13                return False
 14            
-15            # Logic: If we sold today, is the profit (Price - MinCost) 
-16            # better than our previous best first profit?
-17            max_p1 = max(max_p1, p - min_sf1)
+15            # MEMOIZATION: Return already computed result for this state
+16            if (index_s, index_p) in dp:
+17                return dp[(index_s, index_p)]
 18            
-19            # --- TRANSACTION 2 ---
-20            # Logic (The Reinvestment Trick): 
-21            # We treat the profit from max_p1 as a discount. 
-22            # If we buy a second stock at price 'p', our "Net Cost" 
-23            # is (Price - Previous Profit). We want to minimize this.
-24            min_sf2 = min(min_sf2, p - max_p1)
-25            
-26            # Logic: The final total profit. 
-27            # (Current Price - Effective Cost).
-28            # This is mathematically equivalent to: 
-29            # (Current Price - p_second_buy) + Profit_from_trade_1
-30            max_p2 = max(max_p2, p - min_sf2)
-31            
-32        return max_p2
-33
-34# DP
-35# class Solution:
-36#     def maxProfit(self, prices: List[int]) -> int:
-37#         dp = {}
-38#         n = len(prices)
-39
-40#         def dfs(day_index, has_stock, transaction_cnt):
-41#             if transaction_cnt >= 2:
-42#                 return 0
+19            # SPECIAL CASE: String is empty, but pattern is not
+20            if index_s == len(s):
+21                # We can only match an empty string if the remaining pattern 
+22                # follows the "char*" format (allowing us to treat it as zero chars).
+23                if index_p < len(p) - 1 and p[index_p + 1] == "*":
+24                    dp[(index_s, index_p)] = helper(index_s, index_p + 2)
+25                    return dp[(index_s, index_p)]
+26                else:
+27                    return False
+28            
+29            # RECURSIVE LOGIC FOR '*' (Quantifier)
+30            # Peek ahead to see if the next character in the pattern is '*'
+31            if index_p < len(p) - 1 and p[index_p + 1] == "*":
+32                # Check if current character matches (literally or via '.')
+33                match = (p[index_p] == '.' or s[index_s] == p[index_p])
+34                
+35                if match:
+36                    # Choice 1: Use '*' to consume current char (helper(index_s + 1, index_p))
+37                    # Choice 2: Ignore '*' and the char before it (helper(index_s, index_p + 2))
+38                    dp[(index_s, index_p)] = helper(index_s + 1, index_p) or \
+39                                             helper(index_s, index_p + 2)
+40                else:
+41                    # If no match, we MUST treat 'char*' as zero characters
+42                    dp[(index_s, index_p)] = helper(index_s, index_p + 2)
 43            
-44#             if day_index == n - 1:
-45#                 if not has_stock:
-46#                     return 0
-47#                 else:
-48#                     return prices[n - 1]
-49            
-50#             if (day_index, has_stock, transaction_cnt) in dp:
-51#                 return dp[(day_index, has_stock, transaction_cnt)]
-52
-53#             if has_stock:
-54#                 # Option 1: Sell today (consumes 1 transaction)
-55#                 # Option 2: Keep holding
-56#                 res = max(prices[day_index] + \
-57#                             dfs(day_index + 1, False, transaction_cnt + 1),
-58#                           dfs(day_index + 1, True, transaction_cnt))
-59#             else:
-60#                 # Option 1: Buy today
-61#                 # Option 2: Stay empty
-62#                 res = max(-prices[day_index] + \
-63#                             dfs(day_index + 1, True, transaction_cnt),
-64#                           dfs(day_index + 1, False, transaction_cnt))
-65            
-66#             dp[(day_index, has_stock, transaction_cnt)] = res
-67#             return res
-68        
-69#         return dfs(0, False, 0)
+44            # RECURSIVE LOGIC FOR '.' or Literal Match
+45            else:
+46                if (p[index_p] == '.' or s[index_s] == p[index_p]):
+47                    # Match found, move both pointers forward
+48                    dp[(index_s, index_p)] = helper(index_s + 1, index_p + 1)
+49                else:
+50                    # Mismatch found with no wildcard '*' to save us
+51                    dp[(index_s, index_p)] = False
+52            
+53            return dp[(index_s, index_p)]
+54        
+55        return helper(0, 0)
